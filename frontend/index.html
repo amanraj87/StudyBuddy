@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Conversational Agent</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-robot"></i> Document Conversational Agent</h1>
+                <p>Upload documents and ask questions about them</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="card">
+                    <h2><i class="fas fa-upload"></i> Upload Documents</h2>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag and drop files here or click to browse</p>
+                            <p class="supported-formats">Supported: PDF, DOCX, TXT, MD, JPG, PNG, TIFF</p>
+                            <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc,.txt,.md,.jpg,.jpeg,.png,.tiff" style="display: none;">
+                            <button class="btn btn-primary" id="chooseFilesBtn">
+                                Choose Files
+                            </button>
+                        </div>
+                    </div>
+                    <div id="uploadProgress" class="upload-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p id="progressText">Processing...</p>
+                    </div>
+                    <div id="uploadResults" class="upload-results"></div>
+                </div>
+            </section>
+
+            <!-- Chat Section -->
+            <section class="chat-section">
+                <div class="card">
+                    <div class="chat-header">
+                        <h2><i class="fas fa-comments"></i> Chat with Documents</h2>
+                        <div class="chat-controls">
+                            <!-- Voice Mode Toggle -->
+                            <button class="btn btn-secondary" id="voiceModeToggle" onclick="toggleVoiceMode()">
+                                <i class="fas fa-microphone"></i> Voice Mode
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearHistory()">
+                                <i class="fas fa-trash"></i> Clear History
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearDocuments()">
+                                <i class="fas fa-folder-open"></i> Clear Documents
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message system">
+                                <div class="message-content">
+                                    <i class="fas fa-info-circle"></i>
+                                    Welcome! Upload a document and start asking questions about it.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <div class="chat-input-wrapper">
+                                <!-- Voice Input Button -->
+                                <button class="btn btn-voice" id="voiceInputBtn" onclick="startVoiceInput()" style="display: none;">
+                                    <i class="fas fa-microphone" id="voiceIcon"></i>
+                                </button>
+                                
+                                <input type="text" id="questionInput" placeholder="Ask a question about your documents..." 
+                                       class="chat-input" onkeypress="handleKeyPress(event)">
+                                
+                                <!-- Voice Output Toggle -->
+                                <button class="btn btn-voice" id="voiceOutputBtn" onclick="toggleVoiceOutput()" style="display: none;">
+                                    <i class="fas fa-volume-up" id="speakerIcon"></i>
+                                </button>
+                                
+                                <button class="btn btn-primary send-btn" onclick="askQuestion()">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Voice Status Indicator -->
+                            <div id="voiceStatus" class="voice-status" style="display: none;">
+                                <div class="voice-indicator">
+                                    <div class="voice-dot"></div>
+                                    <span id="voiceStatusText">Listening...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats-section">
+                <div class="card">
+                    <h2><i class="fas fa-chart-bar"></i> Statistics</h2>
+                    <div class="stats-grid" id="statsGrid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="docCount">0</div>
+                            <div class="stat-label">Documents</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="chunkCount">0</div>
+                            <div class="stat-label">Chunks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="wordCount">0</div>
+                            <div class="stat-label">Words</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="conversationCount">0</div>
+                            <div class="stat-label">Conversations</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loadingText">Processing...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
